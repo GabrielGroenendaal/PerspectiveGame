@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 7667611896189542556}
   - component: {fileID: 591167494052134150}
   - component: {fileID: 710176935050540175}
-  m_Layer: 0
+  - component: {fileID: 2764794367374894657}
+  m_Layer: 13
   m_Name: Challenge Display
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,14 +27,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3754666272575541219}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.248, y: 4.957, z: 6.84}
-  m_LocalScale: {x: 16, y: 9, z: 1}
+  m_LocalRotation: {x: -0.0910497, y: -0.00034759074, z: -0.000031780037, w: 0.99584633}
+  m_LocalPosition: {x: 10.08998, y: -16.41905, z: 0.098998055}
+  m_LocalScale: {x: 22.213856, y: 9.940568, z: 1.1045076}
   m_Children:
   - {fileID: 6437644913641092313}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -10.448001, y: -0.040000003, z: 0}
 --- !u!33 &7667611896189542556
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -92,6 +93,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2764794367374894657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3754666272575541219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33a629af5a2e2074bac0caec58cf41fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  images: []
+  zooming: 0
 --- !u!1 &5493474619411984003
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +119,7 @@ GameObject:
   - component: {fileID: 8270972202782770505}
   - component: {fileID: 8941410652089347450}
   - component: {fileID: 9043028795791875372}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}

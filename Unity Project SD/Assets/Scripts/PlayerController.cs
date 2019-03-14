@@ -8,37 +8,37 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
+    /* Movement Variables */
     public Rigidbody thisRigidBody; // the rigidbody we'll be moving
     public Camera thisCamera;   // the camera
-
     public float pitch; // the mouse movement up/down
     public float yaw;   // the mouse movement left/right
-
     public float fpForwardBackward; // input float from  W and S keys
     public float fpStrafe;  // input float from A D keys
-
     public Vector3 inputVelocity;  // cumulative velocity to move character
     public float velocityModifier;  // velocity of conroller multiplied by this number
+    private float timer; // A timer for the jump
+    
+    /* Text and UI Objects */
+    public TextMeshPro number; // Displays the current score
+    public TextMeshPro totalpills; // Displays the Number of Pills / Total Pills 
+    public TextMeshProUGUI poof; // Displays personal text
+    
+    /* Game Variables */
+    public float target; // The number you want to reach. Stored by the room
+    private int currentNumberofPills; // How many pills you have eaten so far
+    public int maxPills; // How many pills you can eat total
+    public float currentNumber; // What your current score is
+    private bool victory; // Checks to see if Victory has been achieved
 
-    
-    private float timer;
-    private bool victory;
-    
+    /* GameObjects to Reference */
     public GameObject Room;
-
-    public TextMeshPro number;
-    public TextMeshPro totalpills;
-    public TextMeshProUGUI poof;
-    
-    public float target;
-    public int currentNumberofPills;
-    public int maxPills;
-    public float currentNumber;
-
-    public AudioSource beep;
+    public AudioSource beep; // A little bleep that plays when you pick up a pill
+    public Audience audience;
+    public Narrator narrator;
+    public GameController gameControl;
     
 
-    
     void Start()
     {
         thisRigidBody = GetComponent<Rigidbody>();
@@ -47,7 +47,6 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
-     
         yaw = Input.GetAxis("Mouse X");
         transform.Rotate(0f, yaw, 0f);
 
@@ -64,6 +63,7 @@ public class PlayerController : MonoBehaviour
     
     void FixedUpdate()
     {
+        // Following a jump, for 2 seconds you will get upward momentum, basically
         if (timer > 0.0f)
         {
             timer -= Time.deltaTime;
@@ -73,24 +73,26 @@ public class PlayerController : MonoBehaviour
             }
         }
         
+        // Resets the timer if the Jump button is pressed
         if (Input.GetKeyDown(KeyCode.Space) && timer <= 0.0f)
         {
             timer = 2.0f;
         }
-        thisRigidBody.velocity = inputVelocity * velocityModifier + (Physics.gravity * .69f);
-        UpdateText();
-        checkVictory();
+        
+        thisRigidBody.velocity = inputVelocity * velocityModifier + (Physics.gravity * .69f); // Movement
+        UpdateText(); // Updates the Scoreboard
+        checkVictory(); // Checks to see if Victory has been Achieved
     }
 
-    
+    // The code to run when the Player object collides with other junk. Let's go.
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.name == "Blue Pill" && other.GetComponent<Pills>().isActive && currentNumberofPills < maxPills)
         {
-            other.GetComponent<Pills>().isActive = false;
+            other.GetComponent<Pills>().isActive = false; // Deactivates the Pill 
             other.GetComponent<Pills>().deactivate();
-            currentNumberofPills++;
-            currentNumber += 2;
+            currentNumberofPills++; // Increments Pills
+            currentNumber += 2; // Adjusts Score
             beep.Play();
         }
         
@@ -98,8 +100,8 @@ public class PlayerController : MonoBehaviour
         {
             other.GetComponent<Pills>().isActive = false;
             other.GetComponent<Pills>().deactivate();
-            currentNumberofPills++;
-            currentNumber = currentNumber * 3;
+            currentNumberofPills++; // Increments Pills
+            currentNumber = currentNumber * 3; // Adjusts Score
             beep.Play();
         }
         
@@ -107,8 +109,8 @@ public class PlayerController : MonoBehaviour
         {
             other.GetComponent<Pills>().isActive = false;
             other.GetComponent<Pills>().deactivate();
-            currentNumberofPills++;
-            currentNumber = currentNumber / 2;
+            currentNumberofPills++; // Increments Pills
+            currentNumber = currentNumber / 2; // Adjusts Score
             beep.Play();
         }
         
@@ -116,46 +118,48 @@ public class PlayerController : MonoBehaviour
         {
             other.GetComponent<Pills>().isActive = false;
             other.GetComponent<Pills>().deactivate();
-            currentNumberofPills++;
-            currentNumber -= 3;
+            currentNumberofPills++; // Increments Pills
+            currentNumber -= 3; // Adjusts Score
             beep.Play();
         }
         
         if (other.transform.name == "Cylinder (6)")
         {
-            Reset();
+            Reset(); // Resets the entire game so you aren't a little dumb dumb
             beep.Play();
         }
         
         if (other.transform.name == "Cylinder (11)" && victory)
         {
-            poof.text = "You win!";
+            poof.text = "You win!"; // If you win, this happens.
         }
         
     }
 
-    
+    // Code for resetting the whole game board. This is accomplished by referencing the "Pills" in the Room gameobject.
     private void Reset()
     {
         currentNumberofPills = 0;
         currentNumber = 0;
-        poof.text = "Okay let's go!";
+        poof.text = "";
         Pills[] pillas = Room.GetComponentsInChildren<Pills>();
+        
+        // Moves through the Array and Resets them
+        
         for (int i = 0; i < pillas.Length; i++)
         {
-            pillas[i].isActive = true;
             pillas[i].reset();
         }
     }
 
-    
+    // Simple Code to Update the Scoreboard Text
     private void UpdateText()
     {
         totalpills.text = currentNumberofPills.ToString() + " / " + maxPills;
         number.text = currentNumber.ToString();
     }
 
-    
+    // Simple Code that Checks to see if a Victory has been Achieved
     private void checkVictory()
     {
         if ((target == currentNumber) && (maxPills == currentNumberofPills))

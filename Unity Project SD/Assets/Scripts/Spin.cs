@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Just a simple script for rotating and spinning the cameras
+
 public class Spin : MonoBehaviour
 {
 
