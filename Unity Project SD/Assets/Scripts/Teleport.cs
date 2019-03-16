@@ -9,8 +9,9 @@ public class Teleport : MonoBehaviour
 {
     /* Locations */
     public GameObject destination; // Stores the teleporter's destination location
-    public GameObject teleporter; // Stores the teleporter's location
     public GameObject Player;
+    public GameController game;
+    public String sceneDestination;
     
     /* Audio Clips */
     public AudioSource teleportSound; // Bloop
@@ -29,7 +30,7 @@ public class Teleport : MonoBehaviour
         // This code raises the teleport pads upwards when activated
         if (timer > 0.0f)
         {
-            teleporter.transform.Translate(0.0f, .5f, 0.0f);
+            transform.Translate(0.0f, .5f, 0.0f);
         }
     }
 
@@ -45,6 +46,8 @@ public class Teleport : MonoBehaviour
     {
         Player.transform.position = destination.transform.position + new Vector3(0, 10f, 0); // Sets the player position to a little bit above the destination
         teleportSound.Play();
+        game.update = false;
+        game.gameState = sceneDestination;
     }
 
     public void Activate()

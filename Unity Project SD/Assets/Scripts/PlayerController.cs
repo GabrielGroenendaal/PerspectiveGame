@@ -22,6 +22,14 @@ public class PlayerController : MonoBehaviour
     /* Text and UI Objects */
     public TextMeshPro number; // Displays the current score
     public TextMeshPro totalpills; // Displays the Number of Pills / Total Pills 
+    
+    /* Stores the UI for different rooms because honestly I'm lazy */
+    public TextMeshPro number1;
+    public TextMeshPro totalpills1;
+    public TextMeshPro number2;
+    public TextMeshPro totalpills2;
+    public GameObject Pills1;
+    public GameObject Pills2;
     public TextMeshProUGUI poof; // Displays personal text
     
     /* Game Variables */
@@ -29,10 +37,13 @@ public class PlayerController : MonoBehaviour
     private int currentNumberofPills; // How many pills you have eaten so far
     public int maxPills; // How many pills you can eat total
     public float currentNumber; // What your current score is
-    private bool victory; // Checks to see if Victory has been achieved
+
+    /* Booleans */
+    public bool isPlaying;
+    public bool victory; // Checks to see if Victory has been achieved
 
     /* GameObjects to Reference */
-    public GameObject Room;
+    public GameObject Pills;
     public AudioSource beep; // A little bleep that plays when you pick up a pill
     public Audience audience;
     public Narrator narrator;
@@ -77,6 +88,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && timer <= 0.0f)
         {
             timer = 2.0f;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && isPlaying == true)
+        {
+            Reset();
         }
         
         thisRigidBody.velocity = inputVelocity * velocityModifier + (Physics.gravity * .69f); // Movement
@@ -123,17 +139,6 @@ public class PlayerController : MonoBehaviour
             beep.Play();
         }
         
-        if (other.transform.name == "Cylinder (6)")
-        {
-            Reset(); // Resets the entire game so you aren't a little dumb dumb
-            beep.Play();
-        }
-        
-        if (other.transform.name == "Cylinder (11)" && victory)
-        {
-            poof.text = "You win!"; // If you win, this happens.
-        }
-        
     }
 
     // Code for resetting the whole game board. This is accomplished by referencing the "Pills" in the Room gameobject.
@@ -142,7 +147,7 @@ public class PlayerController : MonoBehaviour
         currentNumberofPills = 0;
         currentNumber = 0;
         poof.text = "";
-        Pills[] pillas = Room.GetComponentsInChildren<Pills>();
+        Pills[] pillas = Pills.GetComponentsInChildren<Pills>();
         
         // Moves through the Array and Resets them
         
@@ -172,5 +177,28 @@ public class PlayerController : MonoBehaviour
         {
             poof.text = "Go to the turquoise portal pad to reset!";
         }
+    }
+
+    // Code for setting the game rules for each area
+    public void setRoom1()
+    {
+        number = number1;
+        totalpills = totalpills1;
+        Pills = Pills1;
+        maxPills = 4;
+        target = 0;
+        currentNumberofPills = 0;
+        currentNumber = 0;
+    }
+    
+    public void setRoom2()
+    {
+        number = number2;
+        totalpills = totalpills2;
+        Pills = Pills2;
+        //maxPills = 4;
+        //target = 0;
+        //currentNumberofPills = 0;
+        //currentNumber = 0;
     }
 }

@@ -23,7 +23,7 @@ public class Narrator : MonoBehaviour
     
     void Start()
     {
-        
+   
     }
 
     void Update()

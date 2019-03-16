@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 // This code displays images on a screen, and in certain instances could be used to display multiple images in time with audio!
 
@@ -12,16 +9,16 @@ public class CoolScreen : MonoBehaviour
 {
 
     public GameObject[] images;
-    public Boolean zooming;
     
     void Start()
     {
         images = new GameObject[transform.childCount];
         
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < images.Length; i++)
         {
             images[i] = transform.GetChild(i).gameObject;
         }
+       
     }
 
     void Update()
@@ -31,38 +28,17 @@ public class CoolScreen : MonoBehaviour
 
     public void setScreen(int index)
     {
+        gameObject.layer = 0;
         HideAll();
-        images[index].SetActive(true);
+        images[index].layer = 0;
     }
 
-    public void setZoom(bool boolean)
-    {
-  
-    }
-
-    public void setSuccess()
-    {
-        HideAll();
-        images[2].SetActive(true);
-    }
-
-    public void setFailure()
-    {
-        HideAll();
-        images[1].SetActive(true);
-    }
-
-    public void SetIntro()
-    {
-        HideAll();
-        images[0].SetActive(true);
-    }
 
     private void HideAll()
     {
         for (int i = 0; i < images.Length; i++)
         {
-            images[i].SetActive(false);
+            images[i].layer = 13;
         }
     }
 }

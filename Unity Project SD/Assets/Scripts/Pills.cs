@@ -8,9 +8,6 @@ public class Pills : MonoBehaviour
     /* State Tracking */
     public Boolean isActive;
     
-    /* References */
-    public GameObject parent;
-    
     void Start()
     {
         isActive = true;
@@ -24,12 +21,12 @@ public class Pills : MonoBehaviour
     public void reset()
     {
         isActive = true;
-        parent.layer = 0;
+        gameObject.layer = 0;
     }
 
     public void deactivate()
     {
         isActive = false;
-        parent.layer = 13;
+        gameObject.layer = 13;
     }
 }
