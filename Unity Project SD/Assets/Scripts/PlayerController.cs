@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Timers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
@@ -31,7 +32,6 @@ public class PlayerController : MonoBehaviour
     public TextMeshPro totalpills2;
     public GameObject Pills1;
     public GameObject Pills2;
-    public TextMeshProUGUI poof; // Displays personal text
     
     /* Game Variables */
     public float target; // The number you want to reach. Stored by the room
@@ -42,13 +42,14 @@ public class PlayerController : MonoBehaviour
     /* Booleans */
     public bool isPlaying;
     public bool victory; // Checks to see if Victory has been achieved
+    public bool loser;
 
     /* GameObjects to Reference */
     public GameObject Pills;
     public Audience audience;
     public Narrator narrator;
     public GameController gameControl;
-    public UIController UIControl;
+    // public UIController UIControl;
     
     public AudioSource beep; // A little bleep that plays when you pick up a pill
 
@@ -63,10 +64,19 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
-        while (UIControl.menuOpen)
+     
+        /*if (Input.GetKeyDown(KeyCode.Tab))
         {
-            return;
+            GameObject.Find("Menu").SetActive(true);
         }
+
+        if (GameObject.Find("Menu").activeInHierarchy)
+        {
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                GameObject.Find("Menu").SetActive(false);
+            }
+        } */
         
         yaw = Input.GetAxis("Mouse X");
         transform.Rotate(0f, yaw, 0f);
@@ -118,7 +128,7 @@ public class PlayerController : MonoBehaviour
         
         thisRigidBody.velocity = inputVelocity * velocityModifier + (Physics.gravity * .69f); // Movement
 
-        if (isPlaying)
+        if (isPlaying && !loser)
         {
             UpdateText(); // Updates the Scoreboard
             checkVictory(); // Checks to see if Victory has been Achieved
@@ -181,7 +191,6 @@ public class PlayerController : MonoBehaviour
     {
         currentNumberofPills = 0;
         currentNumber = 0;
-        poof.text = "";
         victory = false;
         Pills[] pillas = Pills.GetComponentsInChildren<Pills>();
         
@@ -193,6 +202,7 @@ public class PlayerController : MonoBehaviour
         }
 
         isPlaying = true;
+        loser = false;
     }
 
     // Simple Code to Update the Scoreboard Text
@@ -212,9 +222,9 @@ public class PlayerController : MonoBehaviour
 
         if ((target != currentNumber) && (maxPills == currentNumberofPills))
         {
-            poof.text = "Press Escape to Reset!";
-            audience.playClip(2);
+            audience.playClip(3);
             narrator.playClip(8);
+            loser = true;
         }
     }
 

@@ -52,7 +52,7 @@ public class Audience : MonoBehaviour
         {
             if (soundClips[i].isPlaying)
             {
-                StartCoroutine(FadeOut(soundClips[i], 1.2f));
+                StartCoroutine(FadeOut(soundClips[i], 1.0f));
             }
         }
        

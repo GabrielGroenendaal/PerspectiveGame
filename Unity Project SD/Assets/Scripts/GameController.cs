@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
     /* References */
     public GameObject player;
     private PlayerController playerControl;
-    public UIController UIControl;
+    // public UIController UIControl;
 
     public GameObject Room1;
     public GameObject Room2;
@@ -40,6 +40,7 @@ public class GameController : MonoBehaviour
     public float timer;
     public float timer1;
     public float timer2;
+    public float timer3;
    
     
     // Start is called before the first frame update
@@ -54,13 +55,12 @@ public class GameController : MonoBehaviour
         Room2.SetActive(false);
         Room3.SetActive(false);
         Room4.SetActive(false);
-        UIControl.hideAll();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        while (UIControl.menuOpen)
+        /* if (UIControl.menuOpen)
         {
             if (Input.GetKey(KeyCode.Tab))
             {
@@ -72,12 +72,8 @@ public class GameController : MonoBehaviour
                 SceneManager.LoadScene(0);
             }
         }
-        
-        
-        if (Input.GetKey(KeyCode.Tab))
-        {
-            UIControl.OpenMenu();
-        }
+        */
+
         
         CheckGameState();
         
@@ -103,14 +99,9 @@ public class GameController : MonoBehaviour
                 screens.RandomScreen();
             }
         }
-        
-        if (Input.GetKey(KeyCode.Tab))
-        {
-            if (UIControl.menuOpen)
-            {
-                
-            }
-        }
+
+
+
     }
 
     private void CheckGameState()
@@ -120,7 +111,7 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
-                UIControl.FadeInUIElement(2);
+                
                 update = true;
             }
         }
@@ -130,7 +121,7 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
-                UIControl.FadeOutUIElement(2);
+                
                 screens.setScreen(0);
                 whitefading.WhiteFadeAnimation();
                 narrator.playClip(0);
@@ -194,7 +185,7 @@ public class GameController : MonoBehaviour
                 gameState = "Game1toGame2";
                 Slideshow = false;
                 screens.setScreen(9);
-                audience.playClip(4);
+                audience.playNoInterruptClip(4);
                 narrator.playClip(7);
                 update = false;
             }
@@ -205,7 +196,6 @@ public class GameController : MonoBehaviour
             if (update == false)
             {
                 teleport2.Activate();
-                UIControl.FadeInUIElement(3);
                 update = true;
             }
         }
@@ -223,7 +213,7 @@ public class GameController : MonoBehaviour
                 lighting.GetLights();
                 lighting.ActivateAllLights();
                 playerControl.setRoom2();
-                UIControl.FadeOutUIElement(3);
+                
                 update = true;
                 Slideshow = true;
             }
@@ -233,7 +223,7 @@ public class GameController : MonoBehaviour
                 gameState = "Game2toConclusion";
                 Slideshow = false;
                 screens.setScreen(9);
-                audience.playClip(4);
+                audience.playNoInterruptClip(4);
                 narrator.playClip(7);
                 update = false;
             }
@@ -244,7 +234,7 @@ public class GameController : MonoBehaviour
             if (update == false)
             {
                 screens.setScreen(0);
-                UIControl.FadeInUIElement(3);
+
                 update = true;
                 teleport3.Activate();
             }
@@ -261,7 +251,7 @@ public class GameController : MonoBehaviour
                 lighting = Room4.transform.GetChild(1).GetComponent<Lighting>();
                 screens.GetScreens();
                 screens.setScreen(0);
-                UIControl.FadeOutUIElement(3);
+
                 lighting.GetLights();
                 lighting.ActivateAllLights();
                 update = true;
@@ -269,7 +259,7 @@ public class GameController : MonoBehaviour
                 screens.setScreen(9);
                 audience.playClip(9);
                 narrator.playClip(10);
-                UIControl.FadeInUIElement(4);
+                timer3 = 3.0f;
             }
 
             if (Input.GetKey(KeyCode.Escape))

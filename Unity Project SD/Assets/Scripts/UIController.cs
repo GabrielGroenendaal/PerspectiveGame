@@ -5,54 +5,56 @@ using UnityEngine;
 public class UIController : MonoBehaviour
 {
 
-    public UIElement[] items;
+    public GameObject[] items;
     public bool menuOpen;
+
     
     // Start is called before the first frame update
     void Start()
     {
-        GetUIElements();
+        hideAll();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+
         
     }
-
-    public void GetUIElements()
-    {
-        items = transform.GetComponentsInChildren<UIElement>();
-    }
+    
 
     public void OpenMenu()
     {
+        print("OpenMenu Works1");
         hideAll();
-        items[0].display();
+        items[0].GetComponent<CanvasGroup>().alpha = 1f;
         menuOpen = true;
+        print("OpenMenu Works 2");
     }
 
     public void CloseMenu()
     {
-        items[0].display();
+        items[0].GetComponent<CanvasGroup>().alpha = 0.5f;
         menuOpen = false;
     }
     
-    public void FadeInUIElement(int index)
+    public void display(int index)
     {
-        items[index].fadeIn();
+        print("display is called");
+        items[index].GetComponent<CanvasGroup>().alpha = 1f;
+        print("display is performed");
     }
     
-    public void FadeOutUIElement(int index)
+    public void hide(int index)
     {
-        items[index].fadeOut();
+        items[index].GetComponent<CanvasGroup>().alpha = 0.5f;
     }
     
     public void hideAll()
     {
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < 4; i++)
         {
-            items[i].fadeOut();
+            items[i].GetComponent<CanvasGroup>().alpha = 0.5f;
         }
     }
  }
