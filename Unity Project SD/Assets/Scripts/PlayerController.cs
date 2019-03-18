@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     public Vector3 inputVelocity;  // cumulative velocity to move character
     public float velocityModifier;  // velocity of conroller multiplied by this number
     private float timer; // A timer for the jump
+    float verticalLook = 0f; 
     
     /* Text and UI Objects */
     public TextMeshPro number; // Displays the current score
@@ -44,25 +45,45 @@ public class PlayerController : MonoBehaviour
 
     /* GameObjects to Reference */
     public GameObject Pills;
-    public AudioSource beep; // A little bleep that plays when you pick up a pill
     public Audience audience;
     public Narrator narrator;
     public GameController gameControl;
+    public UIController UIControl;
     
+    public AudioSource beep; // A little bleep that plays when you pick up a pill
+
 
     void Start()
     {
         thisRigidBody = GetComponent<Rigidbody>();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     
     void Update()
     {
+        while (UIControl.menuOpen)
+        {
+            return;
+        }
+        
         yaw = Input.GetAxis("Mouse X");
         transform.Rotate(0f, yaw, 0f);
 
         pitch = Input.GetAxis("Mouse Y");
-        thisCamera.transform.Rotate(-pitch, 0f, 0f);
+        // sCamera.transform.Rotate(-pitch, 0f, 0f);
+       
+
+        // BETTER MOUSE LOOK:
+        // add mouse input to verticalLook, then clamp verticalLook
+        verticalLook += -pitch;
+        verticalLook = Mathf.Clamp(verticalLook, -80f, 80f);
+		
+        // actually apply verticalLook to camera's rotation
+        thisCamera.transform.localEulerAngles = new Vector3(verticalLook,0f,0f);        
+
+        // movement
 
         fpForwardBackward = Input.GetAxis("Vertical");
         fpStrafe = Input.GetAxis("Horizontal");
@@ -96,8 +117,13 @@ public class PlayerController : MonoBehaviour
         }
         
         thisRigidBody.velocity = inputVelocity * velocityModifier + (Physics.gravity * .69f); // Movement
-        UpdateText(); // Updates the Scoreboard
-        checkVictory(); // Checks to see if Victory has been Achieved
+
+        if (isPlaying)
+        {
+            UpdateText(); // Updates the Scoreboard
+            checkVictory(); // Checks to see if Victory has been Achieved
+        }
+       
     }
 
     // The code to run when the Player object collides with other junk. Let's go.
@@ -109,7 +135,7 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber += 2; // Adjusts Score
-            beep.Play();
+            reaction();
         }
         
         if (other.transform.name == "Yellow Pill" && other.GetComponent<Pills>().isActive && currentNumberofPills < maxPills)
@@ -118,7 +144,7 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber = currentNumber * 3; // Adjusts Score
-            beep.Play();
+            reaction();
         }
         
         if (other.transform.name == "Green Pill" && other.GetComponent<Pills>().isActive && currentNumberofPills < maxPills)
@@ -127,7 +153,7 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber = currentNumber / 2; // Adjusts Score
-            beep.Play();
+            reaction();
         }
         
         if (other.transform.name == "Red Pill" && other.GetComponent<Pills>().isActive && currentNumberofPills < maxPills)
@@ -136,7 +162,16 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber -= 3; // Adjusts Score
-            beep.Play();
+            reaction();
+        }
+        
+        if (other.transform.name == "Pink Pill" && other.GetComponent<Pills>().isActive && currentNumberofPills < maxPills)
+        {
+            other.GetComponent<Pills>().isActive = false;
+            other.GetComponent<Pills>().deactivate();
+            currentNumberofPills++; // Increments Pills
+            currentNumber = currentNumber * -2; // Adjusts Score
+            reaction();
         }
         
     }
@@ -147,6 +182,7 @@ public class PlayerController : MonoBehaviour
         currentNumberofPills = 0;
         currentNumber = 0;
         poof.text = "";
+        victory = false;
         Pills[] pillas = Pills.GetComponentsInChildren<Pills>();
         
         // Moves through the Array and Resets them
@@ -155,6 +191,8 @@ public class PlayerController : MonoBehaviour
         {
             pillas[i].reset();
         }
+
+        isPlaying = true;
     }
 
     // Simple Code to Update the Scoreboard Text
@@ -170,12 +208,13 @@ public class PlayerController : MonoBehaviour
         if ((target == currentNumber) && (maxPills == currentNumberofPills))
         {
             victory = true;
-            poof.text = "You won, hooray!";
         }
 
         if ((target != currentNumber) && (maxPills == currentNumberofPills))
         {
-            poof.text = "Go to the turquoise portal pad to reset!";
+            poof.text = "Press Escape to Reset!";
+            audience.playClip(2);
+            narrator.playClip(8);
         }
     }
 
@@ -189,6 +228,7 @@ public class PlayerController : MonoBehaviour
         target = 0;
         currentNumberofPills = 0;
         currentNumber = 0;
+        Reset();
     }
     
     public void setRoom2()
@@ -196,9 +236,17 @@ public class PlayerController : MonoBehaviour
         number = number2;
         totalpills = totalpills2;
         Pills = Pills2;
-        //maxPills = 4;
-        //target = 0;
-        //currentNumberofPills = 0;
-        //currentNumber = 0;
+        maxPills = 4;
+        target = 1;
+        currentNumberofPills = 0;
+        currentNumber = 0;
+        Reset();
+    }
+
+    public void reaction()
+    {
+        beep.Play();
+        audience.RandomReaction();
+        narrator.RandomReaction();
     }
 }

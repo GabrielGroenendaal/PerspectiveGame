@@ -10,7 +10,7 @@ public class Pills : MonoBehaviour
     
     void Start()
     {
-        isActive = true;
+        isActive = false;
     }
 
     void FixedUpdate()

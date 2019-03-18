@@ -16,27 +16,24 @@ public class Teleport : MonoBehaviour
     /* Audio Clips */
     public AudioSource teleportSound; // Bloop
     public AudioSource activationSound; // Bleep
-    
-    /* Timer */
-    private float timer;
+
+    private bool isActive;
+
 
     void Start()
     {
-        timer = 0.0f;
+        transform.gameObject.layer = 13;
     }
 
     void FixedUpdate()
     {
         // This code raises the teleport pads upwards when activated
-        if (timer > 0.0f)
-        {
-            transform.Translate(0.0f, .5f, 0.0f);
-        }
+
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.CompareTag("Player"))
+        if (other.transform.CompareTag("Player") && isActive)
         {
             teleportPlayer();
         }
@@ -46,13 +43,14 @@ public class Teleport : MonoBehaviour
     {
         Player.transform.position = destination.transform.position + new Vector3(0, 10f, 0); // Sets the player position to a little bit above the destination
         teleportSound.Play();
+        game.whitefading.WhiteFadeAnimation();
         game.update = false;
         game.gameState = sceneDestination;
     }
 
     public void Activate()
     {
-        activationSound.Play();
-        timer = 2.0f;
+        transform.gameObject.layer = 0;
+        isActive = true;
     }
 }
