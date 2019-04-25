@@ -25,6 +25,9 @@ public class GameController : MonoBehaviour
     public GameObject Room2;
     public GameObject Room3;
     public GameObject Room4;
+    public GameObject Room5;
+    public GameObject Room6;
+    public GameObject Room7;
 
     public Teleport teleport1;
     public Teleport teleport2;
@@ -60,21 +63,6 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        /* if (UIControl.menuOpen)
-        {
-            if (Input.GetKey(KeyCode.Tab))
-            {
-                UIControl.CloseMenu();
-            }
-
-            if (Input.GetKey(KeyCode.Backspace))
-            {
-                SceneManager.LoadScene(0);
-            }
-        }
-        */
-
-        
         CheckGameState();
         
         if (timer > 0.0f)
@@ -100,8 +88,6 @@ public class GameController : MonoBehaviour
             }
         }
 
-
-
     }
 
     private void CheckGameState()
@@ -111,7 +97,6 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
-                
                 update = true;
             }
         }
@@ -121,7 +106,6 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
-                
                 screens.setScreen(0);
                 whitefading.WhiteFadeAnimation();
                 narrator.playClip(0);
@@ -150,7 +134,6 @@ public class GameController : MonoBehaviour
             }
         }
         
-        // 
         if (gameState == "narrateToGame1")
         {
             if (update == false)
@@ -238,7 +221,133 @@ public class GameController : MonoBehaviour
                 update = true;
                 teleport3.Activate();
             }
-
+        }
+        
+                
+        if (gameState == "Game3")
+        {
+            if (update == false)
+            {
+                Room3.SetActive(false);
+                Room4.SetActive(true);
+                
+                screens = Room4.transform.GetChild(2).GetComponent<ScreenController>();
+                screens.GetScreens();
+                screens.setScreen(2);
+                
+                lighting = Room4.transform.GetChild(3).GetComponent<Lighting>();
+                lighting.GetLights();
+                lighting.ActivateAllLights();
+                
+                // playerControl.setRoom3();
+                
+                update = true;
+                Slideshow = true;
+            }
+            
+            if (playerControl.victory)
+            {
+                gameState = "Game3toGame4";
+                Slideshow = false;
+                screens.setScreen(9);
+                audience.playNoInterruptClip(4);
+                narrator.playClip(7);
+                update = false;
+            }
+        }
+        
+        if (gameState == "Game3toGame4")
+        {
+            if (update == false)
+            {
+                screens.setScreen(0);
+                update = true;
+                // teleport4.Activate();
+            }
+        }
+        
+        if (gameState == "Game4")
+        {
+            if (update == false)
+            {
+                Room4.SetActive(false);
+                Room5.SetActive(true);
+                
+                screens = Room5.transform.GetChild(2).GetComponent<ScreenController>();
+                screens.GetScreens();
+                screens.setScreen(2);
+                
+                lighting = Room5.transform.GetChild(3).GetComponent<Lighting>();
+                lighting.GetLights();
+                lighting.ActivateAllLights();
+                
+                // playerControl.setRoom4();
+                
+                update = true;
+                Slideshow = true;
+            }
+            
+            if (playerControl.victory)
+            {
+                gameState = "Game4toGame5";
+                Slideshow = false;
+                screens.setScreen(9);
+                audience.playNoInterruptClip(4);
+                narrator.playClip(7);
+                update = false;
+            }
+        }
+        
+        if (gameState == "Game4toGame5")
+        {
+            if (update == false)
+            {
+                screens.setScreen(0);
+                update = true;
+                // teleport5.Activate();
+            }
+        }
+        
+        if (gameState == "Game5")
+        {
+            if (update == false)
+            {
+                Room4.SetActive(false);
+                Room5.SetActive(true);
+                
+                screens = Room5.transform.GetChild(2).GetComponent<ScreenController>();
+                screens.GetScreens();
+                screens.setScreen(2);
+                
+                lighting = Room5.transform.GetChild(3).GetComponent<Lighting>();
+                lighting.GetLights();
+                lighting.ActivateAllLights();
+                
+                // playerControl.setRoom5();
+                
+                update = true;
+                Slideshow = true;
+            }
+            
+            if (playerControl.victory)
+            {
+                gameState = "Game4toGame5";
+                Slideshow = false;
+                screens.setScreen(9);
+                audience.playNoInterruptClip(4);
+                narrator.playClip(7);
+                update = false;
+            }
+        }
+        
+        if (gameState == "Game5toConclusion")
+        {
+            if (update == false)
+            {
+                screens.setScreen(0);
+                update = true;
+                // teleport4.Activate();
+            }
         }
         
         if (gameState == "Conclusion")
