@@ -13,8 +13,8 @@ public class GameController : MonoBehaviour
     
     /* Game States */
     public String gameState = "intro";
-    public bool update;
-    public bool Slideshow;
+    private bool update;
+    private bool Slideshow;
     
     /* References */
     public GameObject player;
@@ -32,18 +32,20 @@ public class GameController : MonoBehaviour
     public Teleport teleport1;
     public Teleport teleport2;
     public Teleport teleport3;
+    public Teleport teleport4;
+    public Teleport teleport5;
+    public Teleport teleport6;
 
-    public Audience audience;
-    public Narrator narrator;
-    public ScreenController screens;
-    public Lighting lighting;
+    private Audience audience;
+    private Narrator narrator;
+    private ScreenController screens;
+    private Lighting lighting;
     public WhiteFade whitefading;
 
     /* Timers */
-    public float timer;
-    public float timer1;
-    public float timer2;
-    public float timer3;
+    private float timer;
+    private float timer1;
+    private float timer2;
    
     
     // Start is called before the first frame update
@@ -52,12 +54,17 @@ public class GameController : MonoBehaviour
         playerControl = player.GetComponent<PlayerController>();
         screens = Room1.transform.GetChild(3).GetComponent<ScreenController>();
         lighting = Room1.transform.GetChild(1).GetComponent<Lighting>();
+        audience = transform.GetChild(0).GetComponent<Audience>();
+        narrator = transform.GetChild(1).GetComponent<Narrator>();
         lighting.ActivateLight(3); 
         lighting.ActivateLight(4);
         audience.playClip(9);
         Room2.SetActive(false);
         Room3.SetActive(false);
         Room4.SetActive(false);
+        Room5.SetActive(false);
+        Room6.SetActive(false);
+        Room7.SetActive(false);
     }
 
     // Update is called once per frame
@@ -161,6 +168,8 @@ public class GameController : MonoBehaviour
                 playerControl.setRoom1();
                 update = true;
                 Slideshow = true;
+                narrator.playClip(11);
+                audience.playClip(9);
             }
 
             if (playerControl.victory)
@@ -169,7 +178,7 @@ public class GameController : MonoBehaviour
                 Slideshow = false;
                 screens.setScreen(9);
                 audience.playNoInterruptClip(4);
-                narrator.playClip(7);
+                narrator.playClip(12);
                 update = false;
             }
         }
@@ -178,6 +187,7 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
+                Debug.Log("This is " + gameState);
                 teleport2.Activate();
                 update = true;
             }
@@ -187,6 +197,7 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
+                Debug.Log("This is Room 2");
                 Room2.SetActive(false);
                 Room3.SetActive(true);
                 screens = Room3.transform.GetChild(2).GetComponent<ScreenController>();
@@ -203,7 +214,7 @@ public class GameController : MonoBehaviour
             
             if (playerControl.victory)
             {
-                gameState = "Game2toConclusion";
+                gameState = "Game2toGame3";
                 Slideshow = false;
                 screens.setScreen(9);
                 audience.playNoInterruptClip(4);
@@ -212,12 +223,12 @@ public class GameController : MonoBehaviour
             }
         }
         
-        if (gameState == "Game2toConclusion")
+        if (gameState == "Game2toGame3")
         {
             if (update == false)
             {
+                Debug.Log("This is " + gameState);
                 screens.setScreen(0);
-
                 update = true;
                 teleport3.Activate();
             }
@@ -228,6 +239,7 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
+                Debug.Log("This is Room 3");
                 Room3.SetActive(false);
                 Room4.SetActive(true);
                 
@@ -239,7 +251,7 @@ public class GameController : MonoBehaviour
                 lighting.GetLights();
                 lighting.ActivateAllLights();
                 
-                // playerControl.setRoom3();
+                playerControl.setRoom3();
                 
                 update = true;
                 Slideshow = true;
@@ -251,7 +263,7 @@ public class GameController : MonoBehaviour
                 Slideshow = false;
                 screens.setScreen(9);
                 audience.playNoInterruptClip(4);
-                narrator.playClip(7);
+                narrator.playClip(9);
                 update = false;
             }
         }
@@ -260,9 +272,10 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
+                Debug.Log("This is " + gameState);
                 screens.setScreen(0);
                 update = true;
-                // teleport4.Activate();
+                teleport4.Activate();
             }
         }
         
@@ -270,6 +283,7 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
+                Debug.Log("This is " + gameState);
                 Room4.SetActive(false);
                 Room5.SetActive(true);
                 
@@ -281,7 +295,7 @@ public class GameController : MonoBehaviour
                 lighting.GetLights();
                 lighting.ActivateAllLights();
                 
-                // playerControl.setRoom4();
+                playerControl.setRoom4();
                 
                 update = true;
                 Slideshow = true;
@@ -293,7 +307,7 @@ public class GameController : MonoBehaviour
                 Slideshow = false;
                 screens.setScreen(9);
                 audience.playNoInterruptClip(4);
-                narrator.playClip(7);
+                narrator.playClip(13);
                 update = false;
             }
         }
@@ -302,9 +316,10 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
+                Debug.Log("This is " + gameState);
                 screens.setScreen(0);
                 update = true;
-                // teleport5.Activate();
+                teleport5.Activate();
             }
         }
         
@@ -312,6 +327,7 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
+                Debug.Log("This is " + gameState);
                 Room4.SetActive(false);
                 Room5.SetActive(true);
                 
@@ -323,7 +339,7 @@ public class GameController : MonoBehaviour
                 lighting.GetLights();
                 lighting.ActivateAllLights();
                 
-                // playerControl.setRoom5();
+                playerControl.setRoom5();
                 
                 update = true;
                 Slideshow = true;
@@ -344,9 +360,10 @@ public class GameController : MonoBehaviour
         {
             if (update == false)
             {
+                Debug.Log("This is " + gameState);
                 screens.setScreen(0);
                 update = true;
-                // teleport4.Activate();
+                teleport6.Activate();
             }
         }
         
@@ -368,7 +385,7 @@ public class GameController : MonoBehaviour
                 screens.setScreen(9);
                 audience.playClip(9);
                 narrator.playClip(10);
-                timer3 = 3.0f;
+                
             }
 
             if (Input.GetKey(KeyCode.Escape))
@@ -379,24 +396,8 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void failure()
+    public void UpdateTrue()
     {
-        // Audience Boos
-        // Screens say aweful
-    }
-
-    public void success()
-    {
-        // Audience Cheers
-        // Screens say YAY
-    }
-    
-    // This is the code that is called when the player reaches the main podium
-    public void Reveal()
-    {
-        // Move all Screens to Layer 0
-        // SetScreens to X
-        // Start Audio
-        // Flash Screen White then Fade in
+        update = false;
     }
 }

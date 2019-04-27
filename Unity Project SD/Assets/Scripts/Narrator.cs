@@ -19,6 +19,11 @@ public class Narrator : MonoBehaviour
      * 8: Failure
      * 9: Game1 to Game2
      * 10: Conclusion
+     *
+     * 11: Pill Explanation
+     * 12: Game 1 to Game 2
+     * 13: Game 2 to Game 3
+     * 14: Game 3 to Game 4
      */
 
     public AudioSource[] soundClips;
@@ -55,15 +60,6 @@ public class Narrator : MonoBehaviour
             }
         }
         
-        /*Narrate.Stop();
-        NarrateToGame1.Stop();
-        Game1.Stop();
-        Game2.Stop();
-        Game3.Stop();
-        Game4.Stop();
-        Game5.Stop();
-        Game1toGame2.Stop();
-        Conclusion.Stop();*/
     }
     
     public static IEnumerator FadeOut (AudioSource audioSource, float FadeTime) {

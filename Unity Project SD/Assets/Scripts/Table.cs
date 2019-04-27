@@ -28,7 +28,7 @@ public class Table : MonoBehaviour
         {
 
             bulletDrop = true;
-            game.update = false;
+            game.UpdateTrue(); 
             game.gameState = "narrate";
         }
     }

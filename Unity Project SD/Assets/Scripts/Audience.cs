@@ -55,16 +55,6 @@ public class Audience : MonoBehaviour
                 StartCoroutine(FadeOut(soundClips[i], 1.0f));
             }
         }
-       
-        /* Ambient.Stop();
-        Applause.Stop();
-        Booo.Stop();
-        Gasp.Stop();
-        Clapping.Stop();
-        Hooray.Stop();
-        Oooh.Stop();
-        Amuse.Stop();
-        Laugh.Stop(); */
     }
 
     public static IEnumerator FadeOut (AudioSource audioSource, float FadeTime) {

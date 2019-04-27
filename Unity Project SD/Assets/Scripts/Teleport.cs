@@ -44,7 +44,7 @@ public class Teleport : MonoBehaviour
         Player.transform.position = destination.transform.position + new Vector3(0, 10f, 0); // Sets the player position to a little bit above the destination
         teleportSound.Play();
         game.whitefading.WhiteFadeAnimation();
-        game.update = false;
+        game.UpdateTrue();
         game.gameState = sceneDestination;
     }
 

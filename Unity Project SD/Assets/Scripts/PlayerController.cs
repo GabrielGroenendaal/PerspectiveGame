@@ -12,26 +12,38 @@ public class PlayerController : MonoBehaviour
     /* Movement Variables */
     public Rigidbody thisRigidBody; // the rigidbody we'll be moving
     public Camera thisCamera;   // the camera
-    public float pitch; // the mouse movement up/down
-    public float yaw;   // the mouse movement left/right
-    public float fpForwardBackward; // input float from  W and S keys
-    public float fpStrafe;  // input float from A D keys
-    public Vector3 inputVelocity;  // cumulative velocity to move character
+    private float pitch; // the mouse movement up/down
+    private float yaw;   // the mouse movement left/right
+    private float fpForwardBackward; // input float from  W and S keys
+    private float fpStrafe;  // input float from A D keys
+    private Vector3 inputVelocity;  // cumulative velocity to move character
     public float velocityModifier;  // velocity of conroller multiplied by this number
     private float timer; // A timer for the jump
-    float verticalLook = 0f; 
+    private float verticalLook; 
     
     /* Text and UI Objects */
-    public TextMeshPro number; // Displays the current score
-    public TextMeshPro totalpills; // Displays the Number of Pills / Total Pills 
+    private TextMeshPro number; // Displays the current score
+    private TextMeshPro totalpills; // Displays the Number of Pills / Total Pills 
     
     /* Stores the UI for different rooms because honestly I'm lazy */
     public TextMeshPro number1;
-    public TextMeshPro totalpills1;
     public TextMeshPro number2;
+    public TextMeshPro number3;
+    public TextMeshPro number4;
+    public TextMeshPro number5;
+
+    public TextMeshPro totalpills1;
     public TextMeshPro totalpills2;
+    public TextMeshPro totalpills3;
+    public TextMeshPro totalpills4;
+    public TextMeshPro totalpills5;
+    
+    /* References to Pills */
     public GameObject Pills1;
     public GameObject Pills2;
+    public GameObject Pills3;
+    public GameObject Pills4;
+    public GameObject Pills5;
     
     /* Game Variables */
     public float target; // The number you want to reach. Stored by the room
@@ -45,12 +57,9 @@ public class PlayerController : MonoBehaviour
     public bool loser;
 
     /* GameObjects to Reference */
-    public GameObject Pills;
+    private GameObject Pills;
     public Audience audience;
     public Narrator narrator;
-    public GameController gameControl;
-    // public UIController UIControl;
-    
     public AudioSource beep; // A little bleep that plays when you pick up a pill
 
 
@@ -64,36 +73,17 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
-     
-        /*if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            GameObject.Find("Menu").SetActive(true);
-        }
-
-        if (GameObject.Find("Menu").activeInHierarchy)
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                GameObject.Find("Menu").SetActive(false);
-            }
-        } */
-        
         yaw = Input.GetAxis("Mouse X");
         transform.Rotate(0f, yaw, 0f);
 
         pitch = Input.GetAxis("Mouse Y");
         // sCamera.transform.Rotate(-pitch, 0f, 0f);
        
-
-        // BETTER MOUSE LOOK:
-        // add mouse input to verticalLook, then clamp verticalLook
         verticalLook += -pitch;
         verticalLook = Mathf.Clamp(verticalLook, -80f, 80f);
 		
         // actually apply verticalLook to camera's rotation
         thisCamera.transform.localEulerAngles = new Vector3(verticalLook,0f,0f);        
-
-        // movement
 
         fpForwardBackward = Input.GetAxis("Vertical");
         fpStrafe = Input.GetAxis("Horizontal");
@@ -195,7 +185,6 @@ public class PlayerController : MonoBehaviour
         Pills[] pillas = Pills.GetComponentsInChildren<Pills>();
         
         // Moves through the Array and Resets them
-        
         for (int i = 0; i < pillas.Length; i++)
         {
             pillas[i].reset();
@@ -234,10 +223,8 @@ public class PlayerController : MonoBehaviour
         number = number1;
         totalpills = totalpills1;
         Pills = Pills1;
-        maxPills = 4;
-        target = 0;
-        currentNumberofPills = 0;
-        currentNumber = 0;
+        maxPills = 1;
+        target = 2;
         Reset();
     }
     
@@ -246,10 +233,38 @@ public class PlayerController : MonoBehaviour
         number = number2;
         totalpills = totalpills2;
         Pills = Pills2;
+        maxPills = 2;
+        target = 1;
+        Reset();
+    }
+    
+    public void setRoom3()
+    {
+        number = number3;
+        totalpills = totalpills3;
+        Pills = Pills3;
+        maxPills = 3;
+        target = 3;
+        Reset();
+    }
+    
+    public void setRoom4()
+    {
+        number = number4;
+        totalpills = totalpills4;
+        Pills = Pills4;
+        maxPills = 4;
+        target = 0;
+        Reset();
+    }
+    
+    public void setRoom5()
+    {
+        number = number5;
+        totalpills = totalpills5;
+        Pills = Pills5;
         maxPills = 4;
         target = 1;
-        currentNumberofPills = 0;
-        currentNumber = 0;
         Reset();
     }
 
