@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Timers;
+using Tinylytics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -58,11 +59,26 @@ public class PlayerController : MonoBehaviour
 
     /* GameObjects to Reference */
     private GameObject Pills;
+    public GameController game;
     public Audience audience;
     public Narrator narrator;
     public AudioSource beep; // A little bleep that plays when you pick up a pill
 
+    
+    /* New Variables for Analytics */
+    private int currentRoom;
+    private bool IsTimingLevel;
+    public float TimeForLevel;
+    
+    private bool IsTimingAttempt;
+    public float TimeForAttempt;
+    public string AllTimesForAttempt;
+    public int numberOfAttempts;
+    
+    public string PillCombination;
+    public string AllPillCombination;
 
+    
     void Start()
     {
         thisRigidBody = GetComponent<Rigidbody>();
@@ -90,6 +106,16 @@ public class PlayerController : MonoBehaviour
 
         inputVelocity = transform.forward * fpForwardBackward;
         inputVelocity += transform.right * fpStrafe;
+
+        if (IsTimingLevel)
+        {
+            TimeForLevel += Time.deltaTime;
+        }
+
+        if (IsTimingAttempt)
+        {
+            TimeForAttempt += Time.deltaTime;
+        }
     }
 
     
@@ -111,7 +137,7 @@ public class PlayerController : MonoBehaviour
             timer = 2.0f;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && isPlaying == true)
+        if (Input.GetKeyDown(KeyCode.Backspace) && isPlaying == true && !victory)
         {
             Reset();
         }
@@ -135,6 +161,7 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber += 2; // Adjusts Score
+            PillCombination = PillCombination + "Blue; ";
             reaction();
         }
         
@@ -144,6 +171,7 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber = currentNumber * 3; // Adjusts Score
+            PillCombination = PillCombination + "Yellow; ";
             reaction();
         }
         
@@ -153,6 +181,7 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber = currentNumber / 2; // Adjusts Score
+            PillCombination = PillCombination + "Green; ";
             reaction();
         }
         
@@ -162,6 +191,7 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber -= 3; // Adjusts Score
+            PillCombination = PillCombination + "Red; ";
             reaction();
         }
         
@@ -171,6 +201,7 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<Pills>().deactivate();
             currentNumberofPills++; // Increments Pills
             currentNumber = currentNumber * -2; // Adjusts Score
+            PillCombination = PillCombination + "Pink; ";
             reaction();
         }
         
@@ -192,6 +223,7 @@ public class PlayerController : MonoBehaviour
 
         isPlaying = true;
         loser = false;
+        IsTimingAttempt = true;
     }
 
     // Simple Code to Update the Scoreboard Text
@@ -207,12 +239,15 @@ public class PlayerController : MonoBehaviour
         if ((target == currentNumber) && (maxPills == currentNumberofPills))
         {
             victory = true;
+            IsTimingLevel = false;
+            UpdateAnalytics();
         }
 
         if ((target != currentNumber) && (maxPills == currentNumberofPills))
         {
             audience.playClip(3);
             narrator.playClip(8);
+            UpdateTimeAttempts();
             loser = true;
         }
     }
@@ -225,6 +260,9 @@ public class PlayerController : MonoBehaviour
         Pills = Pills1;
         maxPills = 1;
         target = 2;
+        
+        currentRoom = 1;
+        IsTimingLevel = true;
         Reset();
     }
     
@@ -235,7 +273,12 @@ public class PlayerController : MonoBehaviour
         Pills = Pills2;
         maxPills = 2;
         target = 1;
+        
+        currentRoom = 2;
+        IsTimingLevel = true;
         Reset();
+        game.lighting.ActivateAllLights();
+     
     }
     
     public void setRoom3()
@@ -245,6 +288,9 @@ public class PlayerController : MonoBehaviour
         Pills = Pills3;
         maxPills = 3;
         target = 3;
+        
+        currentRoom = 3;
+        IsTimingLevel = true;
         Reset();
     }
     
@@ -255,6 +301,9 @@ public class PlayerController : MonoBehaviour
         Pills = Pills4;
         maxPills = 4;
         target = 0;
+        
+        currentRoom = 4;
+        IsTimingLevel = true;
         Reset();
     }
     
@@ -265,6 +314,11 @@ public class PlayerController : MonoBehaviour
         Pills = Pills5;
         maxPills = 4;
         target = 1;
+
+        currentRoom = 5;
+        IsTimingLevel = true;
+        IsTimingAttempt = false;
+        TimeForAttempt = 0;
         Reset();
     }
 
@@ -273,5 +327,91 @@ public class PlayerController : MonoBehaviour
         beep.Play();
         audience.RandomReaction();
         narrator.RandomReaction();
+    }
+
+    public void UpdateAnalytics()
+    {
+        UpdateTimeAttempts();
+        
+        if (currentRoom == 1)
+        {
+            /* Tinylytics.AnalyticsManager.LogCustomMetric("TimeSpentLevel1", TimeForLevel.ToString()); // Updates the metric for how long the entire level took
+            Tinylytics.AnalyticsManager.LogCustomMetric("TimesOnEachAttemptLevel1", AllTimesForAttempt); // Updates the metric with the list of times
+            Tinylytics.AnalyticsManager.LogCustomMetric("AttemptsLevel1", numberOfAttempts.ToString()); // Updates the metrics with the number of attempts
+            Tinylytics.AnalyticsManager.LogCustomMetric("PillCombination1", AllPillCombination);*/
+
+            GameObject.Find("Level 1: Time Spent").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 1: # of Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 1: Time per Attempt").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 1: Pill Combination Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+        }
+        
+        else if (currentRoom == 2)
+        {
+            Tinylytics.AnalyticsManager.LogCustomMetric("TimeSpentLevel2", TimeForLevel.ToString()); // Updates the metric for how long the entire level took
+            Tinylytics.AnalyticsManager.LogCustomMetric("TimesOnEachAttemptLevel2", AllTimesForAttempt); 
+            Tinylytics.AnalyticsManager.LogCustomMetric("AttemptsLevel2", numberOfAttempts.ToString());
+            Tinylytics.AnalyticsManager.LogCustomMetric("PillCombination2", AllPillCombination);
+            
+            GameObject.Find("Level 2: Time Spent").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 2: # of Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 2: Time per Attempt").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 2: Pill Combination Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+        }
+        
+        else if (currentRoom == 3)
+        {
+            /* Tinylytics.AnalyticsManager.LogCustomMetric("TimeSpentLevel3", TimeForLevel.ToString()); // Updates the metric for how long the entire level took
+            Tinylytics.AnalyticsManager.LogCustomMetric("TimesOnEachAttemptLevel3", AllTimesForAttempt);
+            Tinylytics.AnalyticsManager.LogCustomMetric("AttemptsLevel3", numberOfAttempts.ToString());
+            Tinylytics.AnalyticsManager.LogCustomMetric("PillCombination3", AllPillCombination); */
+            
+            GameObject.Find("Level 3: Time Spent").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 3: # of Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 3: Time per Attempt").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 3: Pill Combination Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+        }
+        
+        else if (currentRoom == 4)
+        {
+            /* Tinylytics.AnalyticsManager.LogCustomMetric("TimeSpentLevel4", TimeForLevel.ToString()); // Updates the metric for how long the entire level took
+            Tinylytics.AnalyticsManager.LogCustomMetric("TimesOnEachAttemptLevel4", AllTimesForAttempt);
+            Tinylytics.AnalyticsManager.LogCustomMetric("AttemptsLevel4", numberOfAttempts.ToString());
+            Tinylytics.AnalyticsManager.LogCustomMetric("PillCombination4", AllPillCombination); */
+            
+            GameObject.Find("Level 4: Time Spent").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 4: # of Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 4: Time per Attempt").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 4: Pill Combination Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+        }
+        
+        else if (currentRoom == 5)
+        {
+            /* Tinylytics.AnalyticsManager.LogCustomMetric("TimeSpentLevel5", TimeForLevel.ToString()); // Updates the metric for how long the entire level took
+            Tinylytics.AnalyticsManager.LogCustomMetric("TimesOnEachAttemptLevel5", AllTimesForAttempt);
+            Tinylytics.AnalyticsManager.LogCustomMetric("AttemptsLevel5", numberOfAttempts.ToString());
+            Tinylytics.AnalyticsManager.LogCustomMetric("PillCombination5", AllPillCombination); */
+            
+            GameObject.Find("Level 5: Time Spent").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 5: # of Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 5: Time per Attempt").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+            GameObject.Find("Level 5: Pill Combination Attempts").GetComponent<Tinylytics_MetricWidget>().OnCustomTrigger();
+        }
+
+        IsTimingLevel = false;
+        TimeForLevel = 0;
+        numberOfAttempts = 0;
+        AllPillCombination = "";
+        AllTimesForAttempt = "";
+    }
+
+    public void UpdateTimeAttempts()
+    {
+        AllTimesForAttempt = AllTimesForAttempt + TimeForAttempt + "; ";
+        AllPillCombination = AllPillCombination + PillCombination + "\n";
+        PillCombination = "";
+        IsTimingAttempt = false;
+        TimeForAttempt = 0;
+        numberOfAttempts++;
     }
 }

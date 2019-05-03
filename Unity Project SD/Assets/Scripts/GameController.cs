@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour
     private Audience audience;
     private Narrator narrator;
     private ScreenController screens;
-    private Lighting lighting;
+    public Lighting lighting;
     public WhiteFade whitefading;
 
     /* Timers */
@@ -47,6 +47,7 @@ public class GameController : MonoBehaviour
     private float timer1;
     private float timer2;
    
+
     
     // Start is called before the first frame update
     void Start()
@@ -94,7 +95,12 @@ public class GameController : MonoBehaviour
                 screens.RandomScreen();
             }
         }
-
+        
+        if (Input.GetKey(KeyCode.CapsLock))
+        {
+            playerControl.UpdateAnalytics();
+            Application.Quit();
+        }
     }
 
     private void CheckGameState()
@@ -130,7 +136,7 @@ public class GameController : MonoBehaviour
             }
 
         // Moves on to the next game state when the clip ends
-            if (narrator.soundClips[0].isPlaying == false || Input.GetKey(KeyCode.Escape))
+            if (narrator.soundClips[0].isPlaying == false || Input.GetKey(KeyCode.Backspace))
             {
                 update = false;
                 gameState = "narrateToGame1";
@@ -328,14 +334,14 @@ public class GameController : MonoBehaviour
             if (update == false)
             {
                 Debug.Log("This is " + gameState);
-                Room4.SetActive(false);
-                Room5.SetActive(true);
+                Room5.SetActive(false);
+                Room6.SetActive(true);
                 
-                screens = Room5.transform.GetChild(2).GetComponent<ScreenController>();
+                screens = Room6.transform.GetChild(2).GetComponent<ScreenController>();
                 screens.GetScreens();
                 screens.setScreen(2);
                 
-                lighting = Room5.transform.GetChild(3).GetComponent<Lighting>();
+                lighting = Room6.transform.GetChild(3).GetComponent<Lighting>();
                 lighting.GetLights();
                 lighting.ActivateAllLights();
                 
@@ -347,7 +353,7 @@ public class GameController : MonoBehaviour
             
             if (playerControl.victory)
             {
-                gameState = "Game4toGame5";
+                gameState = "Game5toConclusion";
                 Slideshow = false;
                 screens.setScreen(9);
                 audience.playNoInterruptClip(4);
@@ -388,7 +394,7 @@ public class GameController : MonoBehaviour
                 
             }
 
-            if (Input.GetKey(KeyCode.Escape))
+            if (Input.GetKey(KeyCode.Backspace))
             {
                 SceneManager.LoadScene(0, LoadSceneMode.Single);
             }
